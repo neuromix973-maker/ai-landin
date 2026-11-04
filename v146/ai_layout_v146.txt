@@ -1,0 +1,43 @@
+export function ai(){
+  if(!state.user)return head('AI помощник','Диагностика · Ремонт · Советы · Экскаваторы')+loginPrompt('Для ИИ-помощника требуется личный кабинет.');
+  const chat=state.aiMessages.length
+    ?state.aiMessages.map(m=>`<div class="bubble ${m.role==='user'?'mine':''}"><span class="who">${m.role==='user'?'Вы':'EXCAVATOR AI'}</span>${esc(m.text)}</div>`).join('')
+    :'<p class="ng146-chat-empty">Напишите вопрос — ИИ диагност ответит здесь.</p>';
+  return head('AI помощник','Диагностика · Ремонт · Советы · Экскаваторы')+`
+<section class="ng146" aria-label="ИИ диагност EXCAVATOR PRO">
+ <div class="ng146-hero">
+  <img src="/assets/approved_ai_banner_v146.webp" alt="Реальный мужчина-диагност EXCAVATOR PRO в мастерской с экскаватором" fetchpriority="high">
+  <div class="ng146-live" aria-live="polite"><b id="ai-status">Проверка подключения…</b><small>Polza.ai</small></div>
+ </div>
+ <div class="ng146-tools">
+  <button type="button" data-page="diagnostics"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4v11a7 7 0 0 0 14 0V4"/><path d="M4 4h8M18 4h8"/><circle cx="25" cy="20" r="4"/><path d="M22 23v1a7 7 0 0 1-14 0v-2"/></svg><span>Диагностика<br>неисправностей</span></button>
+  <button type="button" data-action="exai-question" data-text="Помоги выполнить безопасный пошаговый ремонт экскаватора. Сначала уточни модель и симптомы."><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8C11 4 6 5 3 6v20c5-2 9-1 13 2m0-20c5-4 10-3 13-2v20c-5-2-9-1-13 2V8z"/></svg><span>Пошаговый<br>ремонт</span></button>
+  <button type="button" data-action="exai-question" data-text="Составь план обслуживания и ТО экскаватора: сначала уточни модель и моточасы."><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3h6l1 4 4 2 4-2 3 5-3 3v4l3 3-3 5-4-2-4 2-1 4h-6l-1-4-4-2-4 2-3-5 3-3v-4l-3-3 3-5 4 2 4-2z"/><circle cx="16" cy="17" r="5"/></svg><span>Обслуживание<br>и ТО</span></button>
+  <button type="button" data-action="exai-question" data-text="Помоги подобрать запчасть экскаватора по модели, серийному номеру и узлу."><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7l7-5 5 5-5 6zM16 13l6-6 6 6-6 6zM11 17l5-4 7 7-5 5zM7 22l5-5 5 5-5 5z"/><circle cx="22" cy="11" r="1"/></svg><span>Подбор<br>запчастей</span></button>
+ </div>
+ <div class="ng146-greeting">
+  <img src="/assets/approved_ai_face_v146.webp" alt="ИИ диагност">
+  <p>Привет, я ваш ИИ диагност EXCAVATOR PRO! 👋<br>Задайте вопрос по ремонту, диагностике, эксплуатации или загрузите фото неисправности.</p>
+ </div>
+ <div class="ng146-samples"><span>Примеры запросов:</span><div>
+ <button type="button" data-action="exai-question" data-text="JCB JS160W, мигает значок технического обслуживания. Что проверить?">Мигает значок ТО</button>
+ <button type="button" data-action="exai-question" data-text="Не запускается двигатель экскаватора. Какие причины и что безопасно проверить?">Не запускается двигатель</button>
+ <button type="button" data-action="exai-question" data-text="Гидравлика экскаватора теряет давление. Что необходимо проверить?">Гидравлика теряет давление</button>
+ <button type="button" data-action="exai-question" data-text="Как сократить расход топлива экскаватора?">Расход топлива ↑</button>
+ </div></div>
+ <div class="ng146-actionline">
+  <button type="button" data-action="new-ai">+ Новый диалог</button>
+  <button type="button" data-action="ai-history">История</button>
+  <button type="button" data-action="ai-pdf">📄 PDF</button>
+ </div>
+ <div id="ai-chat" class="ng146-chat" aria-live="polite">${chat}</div>
+ <form id="ai-form" class="ng146-composer" autocomplete="off">
+  <button type="button" class="ng146-tool" data-action="ai-photo" aria-label="Сфотографировать" title="Фото"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h6l3-4h10l3 4h6v18H2z"/><circle cx="16" cy="18" r="6"/></svg></button>
+  <button type="button" class="ng146-tool" data-action="exai-gallery" aria-label="Галерея" title="Из галереи"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="26" height="24" rx="3"/><circle cx="11" cy="11" r="3"/><path d="m5 25 9-9 6 5 4-4 5 5"/></svg></button>
+  <textarea name="text" rows="1" required placeholder="Введите ваш вопрос…" aria-label="Вопрос ИИ диагносту"></textarea>
+  <button type="button" class="ng146-mic" data-action="mic" aria-label="Голосовой ввод" title="Микрофон"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="2" width="10" height="19" rx="5"/><path d="M7 16v2a9 9 0 0 0 18 0v-2M16 27v4m-6 0h12"/></svg></button>
+  <button type="submit" class="ng146-send primary" aria-label="Отправить вопрос"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M29 3 2 14l11 4 4 11L29 3Zm-6 7-8 10-1-4-4-1 13-5Z"/></svg></button>
+  <input id="ai-pdf-input" type="file" accept="application/pdf" hidden>
+ </form>
+</section>`;
+}
